@@ -1,0 +1,48 @@
+[DEFAULT]
+; 文件批量处理工具配置文件
+; 最后修改时间: 2025-10-27
+
+; 单个文件大小限制 (MB)
+file_size_limit = 10
+
+; 默认输出文件夹路径
+default_output_folder = 
+
+; 默认输出文件夹名称
+default_output_folder_name = 批量处理结果
+
+; pip镜像源地址
+pip_mirror = https://pypi.tuna.tsinghua.edu.cn/simple
+
+; Flask服务端口
+flask_port = 5000
+
+; 日志级别 (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+log_level = INFO
+
+; 是否自动打开浏览器
+auto_open_browser = True
+
+; 处理超时时间 (秒)
+timeout = 300
+
+; 临时文件目录
+temp_dir = ./temp
+
+; 最大并发处理数
+max_concurrent = 5
+
+; 是否保存处理日志
+save_log = False
+
+; 日志文件路径
+log_file = ./processing.log
+
+; 是否启用详细输出
+verbose = False
+
+; 文件夹名称清理规则
+clean_folder_names = True
+
+; 支持的文件类型 (逗号分隔)
+supported_extensions = doc,docx,txt,pdf,xls,xlsx,csv,ppt,pptx,jpg,jpeg,png,gif,bmp

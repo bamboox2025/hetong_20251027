@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件批量处理工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 18px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 20px;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .step-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 18px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .step-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            flex-grow: 1;
+        }
+        
+        .step-content {
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            box-shadow: 0 3px 10px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            box-shadow: 0 3px 10px rgba(243, 156, 18, 0.3);
+        }
+        
+        .btn-warning:hover {
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95em;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95em;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+        
+        .file-list {
+            margin-top: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1.5px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        
+        .file-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.2s ease;
+        }
+        
+        .file-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        
+        .file-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3498db;
+            color: white;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        
+        .file-name {
+            font-weight: 500;
+            color: #2c3e50;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 8px;
+        }
+        
+        .file-size {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            white-space: nowrap;
+        }
+        
+        .file-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+        
+        .path-display {
+            font-size: 0.9em;
+            color: #666;
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            margin-top: 6px;
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .name-list {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.9em;
+        }
+        
+        .name-item {
+            padding: 6px 0;
+            border-bottom: 1px solid #e9ecef;
+            color: #2c3e50;
+        }
+        
+        .name-item:last-child {
+            border-bottom: none;
+        }
+        
+        .action-area {
+            background: #f1f8ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e3f2fd;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .status-panel {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: none;
+            font-size: 0.95em;
+        }
+        
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .progress-container {
+            margin-top: 15px;
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 3px;
+        }
+        
+        .config-panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .config-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .config-row {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .config-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95em;
+        }
+        
+        .config-value {
+            font-size: 0.9em;
+            color: #666;
+            word-break: break-all;
+        }
+        
+        .config-edit {
+            font-size: 0.85em;
+            color: #3498db;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 1200px) {
+            .steps-container {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .config-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+        }
+        
+        /* 滚动条样式优化 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>文件批量处理工具</h1>
+            <p>快速处理文件复制和文件夹创建</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- 处理步骤 -->
+            <div class="steps-container">
+                <!-- 步骤1: 选择源文件夹 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">选择源文件夹</div>
+                    </div>
+                    <div class="step-content">
+                        <button class="btn" onclick="selectSourceFolder()">
+                            <i>📂</i> 选择文件夹
+                        </button>
+                        <div id="sourceFolderPath" class="path-display" style="display: none;"></div>
+                    </div>
+                </div>
+                
+                <!-- 步骤2: 选择文件 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">选择要处理的文件</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="file-list" id="fileList">
+                            <div style="text-align: center; padding: 20px; color: #7f8c8d; font-size: 0.9em;">
+                                请先选择源文件夹
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 步骤3: 选择name.txt文件 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">选择name.txt文件</div>
+                    </div>
+                    <div class="step-content">
+                        <button class="btn" onclick="selectNameFile()">
+                            <i>📋</i> 选择文件
+                        </button>
+                        <div id="nameFilePath" class="path-display" style="display: none;"></div>
+                        <div id="nameList" class="name-list" style="display: none;"></div>
+                    </div>
+                </div>
+                
+                <!-- 步骤4: 设置输出位置 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">设置输出位置</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="outputFolderName" placeholder="输出文件夹名称" value="">
+                        </div>
+                        <button class="btn" onclick="selectOutputFolder()">
+                            <i>📤</i> 选择位置
+                        </button>
+                        <div id="outputFolderPath" class="path-display" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 操作区域 -->
+            <div class="action-area">
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="startProcessing()">
+                        <i>▶️</i> 开始处理
+                    </button>
+                    <button class="btn btn-warning" onclick="resetForm()">
+                        <i>🔄</i> 重置
+                    </button>
+                    <button class="btn" onclick="showConfigPanel()">
+                        <i>⚙️</i> 设置
+                    </button>
+                </div>
+                
+                <!-- 状态信息 -->
+                <div id="status" class="status-panel"></div>
+                
+                <!-- 进度条 -->
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                
+                <!-- 统计信息 -->
+                <div class="statistics" id="statistics" style="display: none;">
+                    <div class="stat-item">
+                        <div class="stat-value" id="folderCount">0</div>
+                        <div class="stat-label">文件夹</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="fileCount">0</div>
+                        <div class="stat-label">总文件</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="successCount">0</div>
+                        <div class="stat-label">成功</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="failCount">0</div>
+                        <div class="stat-label">失败</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 配置面板 -->
+            <div class="config-panel" id="configPanel" style="display: none;">
+                <div class="config-title">
+                    <i>⚙️</i> 系统设置
+                </div>
+                <div class="config-row">
+                    <div class="config-label">文件大小限制:</div>
+                    <div class="config-value" id="configFileSizeLimit">10 MB</div>
+                    <div class="config-edit" onclick="editConfig('fileSizeLimit')">编辑</div>
+                </div>
+                <div class="config-row">
+                    <div class="config-label">默认输出位置:</div>
+                    <div class="config-value" id="configDefaultOutputFolder">桌面</div>
+                    <div class="config-edit" onclick="editConfig('defaultOutputFolder')">编辑</div>
+                </div>
+                <div class="config-row">
+                    <div class="config-label">默认文件夹名称:</div>
+                    <div class="config-value" id="configDefaultOutputFolderName">批量处理结果</div>
+                    <div class="config-edit" onclick="editConfig('defaultOutputFolderName')">编辑</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sourceFolder = '';
+        let nameFilePath = '';
+        let outputFolder = '';
+        let selectedFiles = [];
+        let config = {};
+        let processingInterval = null;
+        
+        // 页面加载完成后初始化
+        window.onload = async function() {
+            await loadDefaultConfig();
+            await loadDefaultOutputFolder();
+        };
+        
+        // 加载默认配置
+        async function loadDefaultConfig() {
+            try {
+                const response = await fetch('/get_default_config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    config = data.config;
+                    updateConfigDisplay();
+                }
+            } catch (error) {
+                console.error('加载默认配置失败:', error);
+            }
+        }
+        
+        // 更新配置显示
+        function updateConfigDisplay() {
+            document.getElementById('configFileSizeLimit').textContent = config.file_size_limit + ' MB';
+            document.getElementById('configDefaultOutputFolder').textContent = 
+                config.default_output_folder.length > 50 ? 
+                config.default_output_folder.substring(0, 50) + '...' : 
+                config.default_output_folder;
+            document.getElementById('configDefaultOutputFolderName').textContent = config.default_output_folder_name;
+            
+            // 设置默认输出文件夹名称
+            document.getElementById('outputFolderName').value = config.default_output_folder_name;
+        }
+        
+        // 加载默认输出文件夹
+        async function loadDefaultOutputFolder() {
+            try {
+                outputFolder = config.default_output_folder;
+                document.getElementById('outputFolderPath').textContent = `默认位置: ${outputFolder}`;
+                document.getElementById('outputFolderPath').style.display = 'block';
+            } catch (error) {
+                console.error('加载默认输出文件夹失败:', error);
+            }
+        }
+        
+        // 选择源文件夹
+        async function selectSourceFolder() {
+            try {
+                const response = await fetch('/select_folder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    sourceFolder = data.path;
+                    document.getElementById('sourceFolderPath').textContent = `已选择: ${sourceFolder}`;
+                    document.getElementById('sourceFolderPath').style.display = 'block';
+                    
+                    // 加载文件列表
+                    loadFileList(sourceFolder);
+                } else {
+                    showStatus('选择文件夹失败', 'error');
+                }
+            } catch (error) {
+                showStatus('选择文件夹时发生错误', 'error');
+                console.error(error);
+            }
+        }
+        
+        // 加载文件列表
+        async function loadFileList(folderPath) {
+            try {
+                const response = await fetch('/list_files', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ folder: folderPath })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    displayFileList(data.files);
+                } else {
+                    showStatus('加载文件列表失败', 'error');
+                }
+            } catch (error) {
+                showStatus('加载文件列表时发生错误', 'error');
+                console.error(error);
+            }
+        }
+        
+        // 显示文件列表
+        function displayFileList(files) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            if (files.length === 0) {
+                fileList.innerHTML = '<div style="text-align: center; padding: 20px; color: #7f8c8d; font-size: 0.9em;">文件夹中没有找到支持的文件</div>';
+                return;
+            }
+            
+            files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                const fileIcon = getFileIcon(file.extension);
+                const fileSize = formatFileSize(file.size);
+                
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-icon">${fileIcon}</div>
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${fileSize}</div>
+                    </div>
+                    <input type="checkbox" class="file-checkbox" onchange="toggleFileSelection('${file.path}', this.checked)">
+                `;
+                
+                fileList.appendChild(fileItem);
+            });
+        }
+        
+        // 获取文件图标
+        function getFileIcon(extension) {
+            const icons = {
+                'doc': '📄', 'docx': '📄', 'txt': '📄', 'pdf': '📄',
+                'xls': '📊', 'xlsx': '📊', 'csv': '📊',
+                'ppt': '📑', 'pptx': '📑',
+                'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️', 'bmp': '🖼️'
+            };
+            return icons[extension.toLowerCase()] || '📄';
+        }
+        
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+        
+        // 切换文件选择
+        function toggleFileSelection(filePath, checked) {
+            if (checked) {
+                selectedFiles.push(filePath);
+            } else {
+                selectedFiles = selectedFiles.filter(path => path !== filePath);
+            }
+        }
+        
+        // 选择name.txt文件
+        async function selectNameFile() {
+            try {
+                const response = await fetch('/select_name_file', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    nameFilePath = data.path;
+                    document.getElementById('nameFilePath').textContent = `已选择: ${nameFilePath}`;
+                    document.getElementById('nameFilePath').style.display = 'block';
+                    
+                    // 读取并显示文件名列表
+                    loadNameList(nameFilePath);
+                } else {
+                    showStatus('选择name.txt文件失败', 'error');
+                }
+            } catch (error) {
+                showStatus('选择name.txt文件时发生错误', 'error');
+                console.error(error);
+            }
+        }
+        
+        // 加载文件名列表
+        async function loadNameList(filePath) {
+            try {
+                const response = await fetch('/read_name_file', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ file_path: filePath })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    displayNameList(data.names, data.count);
+                } else {
+                    showStatus('读取name.txt文件失败', 'error');
+                }
+            } catch (error) {
+                showStatus('读取name.txt文件时发生错误', 'error');
+                console.error(error);
+            }
+        }
+        
+        // 显示文件名列表
+        function displayNameList(names, count) {
+            const nameList = document.getElementById('nameList');
+            nameList.innerHTML = `<strong>将创建 ${count} 个文件夹:</strong><br>`;
+            
+            const maxDisplay = 10; // 最多显示10个
+            const displayNames = names.slice(0, maxDisplay);
+            
+            displayNames.forEach((name, index) => {
+                const nameItem = document.createElement('div');
+                nameItem.className = 'name-item';
+                nameItem.textContent = `${index + 1}. ${name}`;
+                nameList.appendChild(nameItem);
+            });
+            
+            if (names.length > maxDisplay) {
+                const moreItem = document.createElement('div');
+                moreItem.className = 'name-item';
+                moreItem.style.color = '#666';
+                moreItem.textContent = `... 还有 ${names.length - maxDisplay} 个文件夹`;
+                nameList.appendChild(moreItem);
+            }
+            
+            nameList.style.display = 'block';
+        }
+        
+        // 选择输出文件夹
+        async function selectOutputFolder() {
+            try {
+                const response = await fetch('/select_output_folder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    outputFolder = data.path;
+                    document.getElementById('outputFolderPath').textContent = `已选择: ${outputFolder}`;
+                    document.getElementById('outputFolderPath').style.display = 'block';
+                } else {
+                    showStatus('选择输出文件夹失败', 'error');
+                }
+            } catch (error) {
+                showStatus('选择输出文件夹时发生错误', 'error');
+                console.error(error);
+            }
+        }
+        
+        // 开始处理
+        async function startProcessing() {
+            // 验证输入
+            if (!sourceFolder) {
+                showStatus('请先选择源文件夹', 'error');
+                return;
+            }
+            
+            if (selectedFiles.length === 0) {
+                showStatus('请选择要处理的文件', 'error');
+                return;
+            }
+            
+            if (!nameFilePath) {
+                showStatus('请选择name.txt文件', 'error');
+                return;
+            }
+            
+            // 获取输出文件夹名称
+            const outputFolderName = document.getElementById('outputFolderName').value.trim() || config.default_output_folder_name;
+            if (!outputFolderName) {
+                showStatus('请输入输出文件夹名称', 'error');
+                return;
+            }
+            
+            try {
+                showStatus('正在初始化处理...', 'info');
+                showProgress();
+                hideStatistics();
+                
+                const response = await fetch('/process_files', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        source_folder: sourceFolder,
+                        selected_files: selectedFiles,
+                        name_file_path: nameFilePath,
+                        output_folder: outputFolder || config.default_output_folder,
+                        output_folder_name: outputFolderName
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    showStatus('处理已开始，请等待完成...', 'info');
+                    // 开始轮询处理状态
+                    startProcessingStatusPolling();
+                } else {
+                    showStatus(`启动处理失败: ${data.message}`, 'error');
+                    hideProgress();
+                }
+            } catch (error) {
+                showStatus('启动处理时发生错误', 'error');
+                console.error(error);
+                hideProgress();
+            }
+        }
+        
+        // 开始轮询处理状态
+        function startProcessingStatusPolling() {
+            if (processingInterval) {
+                clearInterval(processingInterval);
+            }
+            
+            processingInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('/get_processing_status');
+                    const status = await response.json();
+                    
+                    updateProcessingStatus(status);
+                    
+                    if (status.status === 'completed' || status.status === 'failed') {
+                        clearInterval(processingInterval);
+                        processingInterval = null;
+                    }
+                } catch (error) {
+                    console.error('获取处理状态失败:', error);
+                }
+            }, 1000);
+        }
+        
+        // 更新处理状态
+        function updateProcessingStatus(status) {
+            if (status.status === 'processing') {
+                showStatus(status.message, 'info');
+                updateProgress(status.progress);
+            } else if (status.status === 'completed') {
+                showStatus(status.message, 'success');
+                updateProgress(100);
+                showStatistics(status);
+            } else if (status.status === 'failed') {
+                showStatus(status.message, 'error');
+                updateProgress(100);
+            }
+        }
+        
+        // 显示统计信息
+        function showStatistics(status) {
+            const statistics = document.getElementById('statistics');
+            if (status.folder_count !== undefined) {
+                document.getElementById('folderCount').textContent = status.folder_count;
+            }
+            if (status.file_count !== undefined) {
+                document.getElementById('fileCount').textContent = status.file_count;
+            }
+            if (status.success_count !== undefined) {
+                document.getElementById('successCount').textContent = status.success_count;
+            }
+            if (status.fail_count !== undefined) {
+                document.getElementById('failCount').textContent = status.fail_count;
+            }
+            statistics.style.display = 'grid';
+        }
+        
+        // 隐藏统计信息
+        function hideStatistics() {
+            document.getElementById('statistics').style.display = 'none';
+        }
+        
+        // 重置表单
+        function resetForm() {
+            if (processingInterval) {
+                clearInterval(processingInterval);
+                processingInterval = null;
+            }
+            
+            sourceFolder = '';
+            nameFilePath = '';
+            outputFolder = config.default_output_folder;
+            selectedFiles = [];
+            
+            document.getElementById('sourceFolderPath').style.display = 'none';
+            document.getElementById('nameFilePath').style.display = 'none';
+            document.getElementById('outputFolderPath').textContent = `默认位置: ${outputFolder}`;
+            document.getElementById('nameList').style.display = 'none';
+            document.getElementById('fileList').innerHTML = '<div style="text-align: center; padding: 20px; color: #7f8c8d; font-size: 0.9em;">请先选择源文件夹</div>';
+            document.getElementById('outputFolderName').value = config.default_output_folder_name;
+            document.getElementById('status').style.display = 'none';
+            hideProgress();
+            hideStatistics();
+            hideConfigPanel();
+        }
+        
+        // 显示状态信息
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status-panel status-${type}`;
+            status.style.display = 'block';
+            
+            // 滚动到状态区域
+            status.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // 显示进度条
+        function showProgress() {
+            const progress = document.querySelector('.progress-container');
+            progress.style.display = 'block';
+        }
+        
+        // 隐藏进度条
+        function hideProgress() {
+            const progress = document.querySelector('.progress-container');
+            progress.style.display = 'none';
+        }
+        
+        // 更新进度
+        function updateProgress(percentage) {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+        }
+        
+        // 显示配置面板
+        function showConfigPanel() {
+            const panel = document.getElementById('configPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // 隐藏配置面板
+        function hideConfigPanel() {
+            document.getElementById('configPanel').style.display = 'none';
+        }
+        
+        // 编辑配置
+        async function editConfig(configKey) {
+            let newValue = '';
+            
+            switch(configKey) {
+                case 'fileSizeLimit':
+                    newValue = prompt('请输入文件大小限制 (MB):', config.file_size_limit);
+                    if (newValue && !isNaN(newValue) && parseInt(newValue) > 0) {
+                        config.file_size_limit = parseInt(newValue);
+                    }
+                    break;
+                    
+                case 'defaultOutputFolderName':
+                    newValue = prompt('请输入默认输出文件夹名称:', config.default_output_folder_name);
+                    if (newValue && newValue.trim()) {
+                        config.default_output_folder_name = newValue.trim();
+                        document.getElementById('outputFolderName').value = config.default_output_folder_name;
+                    }
+                    break;
+                    
+                case 'defaultOutputFolder':
+                    const response = await fetch('/select_output_folder', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        config.default_output_folder = data.path;
+                    }
+                    break;
+            }
+            
+            // 保存配置
+            if (newValue !== null) {
+                try {
+                    await fetch('/save_config', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(config)
+                    });
+                    updateConfigDisplay();
+                    showStatus('配置保存成功', 'success');
+                } catch (error) {
+                    showStatus('配置保存失败', 'error');
+                    console.error(error);
+                }
+            }
+        }
+        
+        // 页面关闭时清理
+        window.onbeforeunload = function() {
+            if (processingInterval) {
+                clearInterval(processingInterval);
+            }
+        };
+    </script>
+</body>
+</html>
