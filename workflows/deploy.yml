@@ -1,4 +1,4 @@
-name: Deploy to Vercel (Updated CLI)
+name: Deploy to Vercel
 
 on:
   push:
@@ -9,9 +9,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
+      # 确保环境变量正确注入
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      CI: "true"  # 强制非交互
-      VERCEL_FORCE: "true"  # 强制覆盖
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      CI: true  # 强制非交互模式（核心）
 
     steps:
       - name: Checkout Code
@@ -29,18 +31,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install Latest Vercel CLI (Quiet)
+      # 关键步骤：彻底清理旧版本 Vercel CLI 并安装最新版
+      - name: Clean & Install Latest Vercel CLI
         run: |
-          npm install -g vercel@latest --silent || true  # 静默安装最新版，忽略警告
-          vercel --version  # 验证版本
+          # 卸载全局旧版本（若存在）
+          npm uninstall -g vercel
+          # 清除 npm 缓存，避免残留旧版本
+          npm cache clean --force
+          # 强制安装最新版 Vercel CLI（当前最新为 v32+）
+          npm install -g vercel@latest
+          # 验证版本（确保输出 v32+，而非 25.1.0）
+          vercel --version
 
-      - name: Deploy with Vercel CLI (Non-Interactive)
+      # 关键步骤：用最新 CLI 非交互部署
+      - name: Deploy to Vercel (Non-Interactive)
         run: |
-          cd ${{ github.workspace }}
-          # 自动链接/创建项目（跳过提问）
-          vercel link --yes --force --prod || true
-          # 强制部署，永不交互
-          vercel --prod --yes --force --confirm --skip-build || true
-          # 输出 URL
-          echo "Deployment URL:"
-          vercel ls --yes | grep -i "https://" || echo "Deployment completed - check Vercel dashboard"
+          vercel deploy \
+            --prod \  # 部署到生产环境
+            --token $VERCEL_TOKEN \  # 身份验证
+            --org-id $VERCEL_ORG_ID \  # 关联组织
+            --project-id $VERCEL_PROJECT_ID \  # 关联项目
+            --yes \  # 自动确认所有提示（禁用交互）
+            --force  # 强制部署（覆盖可能的冲突）
