@@ -11,7 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        # 无 path：直接在根目录
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -20,11 +21,14 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: '--prod'
+          vercel-args: '--prod --yes'  # ← 关键：--yes 自动确认 Y
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}     # 可选
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # 可选
+          working-directory: .
