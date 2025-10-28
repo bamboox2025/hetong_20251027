@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: Deploy to Vercel (Script)
 
 on:
   push:
@@ -10,9 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      # 强制非交互环境变量（预判 Vercel CLI 交互）
-      CI: true
-      VERCEL_FORCE: true
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      CI: "true"
+      VERCEL_FORCE: "true"
 
     steps:
       - name: Checkout Code
@@ -30,18 +31,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 强制非交互部署 + 预设项目
-      - name: Deploy to Vercel (Non-Interactive)
-        uses: amondnet/vercel-action@v32
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: .
-          vercel-args: >-
-            --prod
-            --yes
-            --force
-            --confirm
-            --skip-build
-            --no-wait
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy with Vercel CLI
+        run: |
+          vercel link --yes --prod || true
+          vercel --prod --yes --force --confirm
+          echo "Deployment URL:"
+          vercel --prod --yes | grep -i "https://"
