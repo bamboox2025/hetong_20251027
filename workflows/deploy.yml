@@ -1,4 +1,4 @@
-name: Deploy to Vercel (Script)
+name: Deploy to Vercel
 
 on:
   push:
@@ -12,8 +12,7 @@ jobs:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      CI: "true"
-      VERCEL_FORCE: "true"
+      CI: true  # 关键：禁用所有交互提示
 
     steps:
       - name: Checkout Code
@@ -31,12 +30,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install Vercel CLI
+      - name: Install Latest Vercel CLI
         run: npm install -g vercel@latest
 
-      - name: Deploy with Vercel CLI
+      - name: Deploy to Vercel
         run: |
-          vercel link --yes --prod || true
-          vercel --prod --yes --force --confirm
-          echo "Deployment URL:"
-          vercel --prod --yes | grep -i "https://"
+          vercel deploy --prod \
+            --token $VERCEL_TOKEN \
+            --org-id $VERCEL_ORG_ID \
+            --project-id $VERCEL_PROJECT_ID \
+            --yes \  # 自动确认所有提示
+            --force  # 强制覆盖现有部署（可选）
