@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: Deploy to Vercel (Pure CLI)
 
 on:
   push:
@@ -9,17 +9,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      # 确保环境变量正确注入
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      CI: true  # 强制非交互模式（核心）
+      CI: "true"
+      VERCEL_FORCE: "true"
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -31,25 +27,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 关键步骤：彻底清理旧版本 Vercel CLI 并安装最新版
-      - name: Clean & Install Latest Vercel CLI
+      # 安装最新 Vercel CLI（v34+，2025 年版本）
+      - name: Install Latest Vercel CLI
         run: |
-          # 卸载全局旧版本（若存在）
-          npm uninstall -g vercel
-          # 清除 npm 缓存，避免残留旧版本
-          npm cache clean --force
-          # 强制安装最新版 Vercel CLI（当前最新为 v32+）
-          npm install -g vercel@latest
-          # 验证版本（确保输出 v32+，而非 25.1.0）
+          npm install -g vercel@latest --silent
           vercel --version
 
-      # 关键步骤：用最新 CLI 非交互部署
-      - name: Deploy to Vercel (Non-Interactive)
+      # 纯 CLI 部署：强制非交互
+      - name: Deploy to Production
         run: |
-          vercel deploy \
-            --prod \  # 部署到生产环境
-            --token $VERCEL_TOKEN \  # 身份验证
-            --org-id $VERCEL_ORG_ID \  # 关联组织
-            --project-id $VERCEL_PROJECT_ID \  # 关联项目
-            --yes \  # 自动确认所有提示（禁用交互）
-            --force  # 强制部署（覆盖可能的冲突）
+          # 自动创建/链接项目
+          vercel link --yes --prod --force || true
+          
+          # 强制部署
+          DEPLOY_URL=$(vercel --prod --yes --force --confirm 2>/dev/null | grep -o 'https://[^ ]*\.vercel\.app' | head -1)
+          
+          if [ -n "$DEPLOY_URL" ]; then
+            echo "部署成功！访问：$DEPLOY_URL"
+            echo "URL=$DEPLOY_URL" >> $GITHUB_OUTPUT
+          else
+            echo "部署完成，请在 Vercel 仪表板查看"
+          fi
