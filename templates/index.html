@@ -34,10 +34,9 @@
             line-height: 1.6;
         }
 
-        /* 左侧固定区域（冻结栏）- 确保非全屏可见 */
         .left-panel {
             width: 340px;
-            min-width: 340px; /* 保证非全屏时不被压缩 */
+            min-width: 340px;
             background: white;
             box-shadow: var(--shadow);
             padding: 20px;
@@ -85,7 +84,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            margin-bottom: 20px; /* 预留底部信息空间 */
+            margin-bottom: 20px;
         }
 
         .result-section h3 {
@@ -128,10 +127,9 @@
             overflow-y: auto;
             font-size: 0.95rem;
             border: 1px dashed var(--border);
-            max-height: 200px; /* 缩短高度，腾出空间 */
+            max-height: 200px;
         }
 
-        /* 左侧底部信息区（作者+二维码） */
         .left-footer {
             margin-top: auto;
             padding-top: 15px;
@@ -160,7 +158,6 @@
             color: #999;
         }
 
-        /* 右侧主内容区 */
         .main-content {
             flex: 1;
             padding: 20px;
@@ -177,7 +174,6 @@
             border-bottom: 3px solid var(--primary);
         }
 
-        /* 四象限布局容器 */
         .grid-container {
             display: grid;
             grid-template-columns: 1fr 1.2fr;
@@ -186,13 +182,11 @@
             height: calc(100% - 80px);
         }
 
-        /* 四个象限区域（调整内容） */
-        .quadrant-1 { grid-area: 1 / 2 / 2 / 3; } /* 右上：数据预览 */
-        .quadrant-2 { grid-area: 1 / 1 / 2 / 2; } /* 左上：基础设置 */
-        .quadrant-3 { grid-area: 2 / 1 / 3 / 2; } /* 左下：数据与层级设置 */
-        .quadrant-4 { grid-area: 2 / 2 / 3 / 3; } /* 右下：输出设置 */
+        .quadrant-1 { grid-area: 1 / 2 / 2 / 3; }
+        .quadrant-2 { grid-area: 1 / 1 / 2 / 2; }
+        .quadrant-3 { grid-area: 2 / 1 / 3 / 2; }
+        .quadrant-4 { grid-area: 2 / 2 / 3 / 3; }
 
-        /* 板块通用样式 */
         .panel {
             background: white;
             border-radius: var(--radius);
@@ -233,7 +227,6 @@
             overflow: auto;
         }
 
-        /* 按钮样式 */
         button {
             background: var(--primary);
             color: white;
@@ -263,7 +256,6 @@
             border: 1px solid var(--danger);
         }
 
-        /* 状态文本 */
         .status {
             color: var(--text);
             margin: 10px 0;
@@ -274,7 +266,6 @@
             border-left: 3px solid var(--primary);
         }
 
-        /* 数据来源切换 */
         .data-tabs {
             display: flex;
             border-bottom: 1px solid var(--border);
@@ -302,7 +293,6 @@
             display: block;
         }
 
-        /* Name输入区域 */
         #nameTextarea {
             width: 100%;
             min-height: 120px;
@@ -338,7 +328,6 @@
             color: var(--primary);
         }
 
-        /* 层级设置 */
         .level-item {
             display: flex;
             align-items: center;
@@ -374,7 +363,6 @@
             margin-top: 12px;
         }
 
-        /* 文件选择区域（多列布局，减少滚动） */
         #fileList {
             margin: 10px 0;
             padding: 10px;
@@ -382,9 +370,9 @@
             border-radius: 5px;
             background: white;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 自动多列 */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 10px;
-            max-height: 300px; /* 增加高度 */
+            max-height: 300px;
             overflow-y: auto;
         }
 
@@ -407,7 +395,6 @@
             height: 16px;
         }
 
-        /* 表格预览 */
         .preview-container {
             margin-top: 15px;
         }
@@ -424,7 +411,7 @@
             border: 1px dashed var(--border);
             border-radius: 5px;
             background: white;
-            max-height: 400px; /* 增加预览区域高度 */
+            max-height: 400px;
             overflow-y: auto;
         }
 
@@ -446,7 +433,6 @@
             font-weight: 600;
         }
 
-        /* 输出设置区域 */
         .output-setting {
             margin-bottom: 15px;
         }
@@ -469,12 +455,10 @@
             font-size: 1.1rem;
         }
 
-        /* 响应式调整 */
         @media (max-width: 1200px) {
             body {
                 flex-direction: column;
             }
-            
             .left-panel {
                 width: 100%;
                 min-width: auto;
@@ -482,22 +466,27 @@
                 border-right: none;
                 border-bottom: 1px solid var(--border);
             }
-            
             .grid-container {
                 grid-template-columns: 1fr;
                 grid-template-rows: auto auto auto auto;
                 height: auto;
             }
-            
             .quadrant-1 { grid-area: 1 / 1 / 2 / 2; }
             .quadrant-2 { grid-area: 2 / 1 / 3 / 2; }
             .quadrant-3 { grid-area: 3 / 1 / 4 / 2; }
             .quadrant-4 { grid-area: 4 / 1 / 5 / 2; }
         }
+
+        /* 支持的文件类型 */
+        .allowed-ext {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
-    <!-- 左侧固定区域（冻结栏） -->
+    <!-- 左侧固定区域 -->
     <div class="left-panel">
         <h2>操作与结果</h2>
         
@@ -533,7 +522,6 @@
             </div>
         </div>
         
-        <!-- 左侧底部：作者信息+二维码占位区 -->
         <div class="left-footer">
             <div class="author-info">
                 by aigc散修竹相左边<br>
@@ -549,24 +537,24 @@
     <div class="main-content">
         <h1>超级无敌炫酷数据自动化办公助手v1.0.1</h1>
 
-        <!-- 四象限布局容器（调整内容） -->
         <div class="grid-container">
-            <!-- 第二象限：左上 - 基础设置和文件选择 -->
+            <!-- 第二象限：左上 - 基础设置 -->
             <div class="panel quadrant-2">
                 <h3 data-panel="1">基础设置</h3>
                 <div class="panel-content">
                     <div>
-                        <label style="font-size: 1.1rem; font-weight: 500;">源文件夹（可选，用于文件复制）</label>
+                        <label style="font-size: 1.1rem; font-weight: 500;">源文件（可选）</label>
                         <div style="margin: 8px 0;">
-                            <button onclick="selectSourceFolder()">选择源文件夹</button>
+                            <input type="file" id="sourceFilesInput" webkitdirectory directory multiple style="display:none">
+                            <button onclick="document.getElementById('sourceFilesInput').click()">选择源文件夹</button>
+                            <div class="allowed-ext">支持 .doc/.xlsx/.ppt/.jpg 等</div>
                         </div>
                         <div class="status" id="sourceStatus">未选择（可选）</div>
                     </div>
 
                     <div style="margin-top: 20px;">
                         <label style="font-size: 1.1rem; font-weight: 500;">文件选择（可选）</label>
-                        <div id="fileList">请先选择源文件夹（可选）</div>
-                        <!-- 已移除“未选择文件（可选）”提示 -->
+                        <div id="fileList">请先选择源文件夹</div>
                     </div>
                 </div>
             </div>
@@ -596,7 +584,8 @@
                     
                     <!-- Name数据内容 -->
                     <div class="data-content active" id="nameContent">
-                        <button onclick="selectNameFile()">选择name.txt</button>
+                        <input type="file" id="nameFileInput" accept=".txt" style="display:none">
+                        <button onclick="document.getElementById('nameFileInput').click()">选择name.txt</button>
                         <textarea id="nameTextarea" placeholder="手动输入（每行1个名称，#开头为注释）"></textarea>
                         <div>
                             <button onclick="saveManualName()">保存名称</button>
@@ -608,7 +597,8 @@
                     
                     <!-- Excel数据内容 -->
                     <div class="data-content" id="excelContent">
-                        <button onclick="selectExcelFile()">选择Excel文件</button>
+                        <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display:none">
+                        <button onclick="document.getElementById('excelFileInput').click()">选择Excel文件</button>
                         <div class="status" id="excelLoadStatus">未选择Excel文件</div>
                     </div>
 
@@ -648,17 +638,16 @@
                         <label style="font-size: 1.1rem; font-weight: 500;">主文件夹名称：</label>
                         <div style="margin: 10px 0;">
                             <input type="text" id="mainFolder" placeholder="主文件夹名称" value="batch_output">
-                            <button class="secondary" onclick="setOutputFolder()">选择输出位置</button>
                         </div>
-                        <div class="status" id="outputStatus">默认位置：桌面/batch_output</div>
+                        <div class="status" id="outputStatus">输出到云端临时目录</div>
                     </div>
 
                     <div style="margin-top: 20px; padding: 10px; background: var(--primary-light); border-radius: 5px;">
                         <p style="font-size: 1rem; font-weight: 500; color: var(--primary);">使用提示：</p>
                         <ul style="margin-left: 20px; font-size: 0.95rem;">
-                            <li>支持只生成文件夹（无需选择源文件）</li>
+                            <li>支持只生成文件夹（无需源文件）</li>
                             <li>Excel列名使用A、B、C等表示</li>
-                            <li>层级设置至少需要1级文件夹</li>
+                            <li>输出在云端临时目录，处理完成后可下载</li>
                         </ul>
                     </div>
                 </div>
@@ -671,7 +660,7 @@
         let currentDataSource = 'name';
         let excelData = [];
         let nameList = [];
-        let outputFolder = '';
+        let selectedFiles = [];
 
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
@@ -680,21 +669,10 @@
             setupLevelChangeListeners();
         });
 
-        // 设置默认输出文件夹
         function setDefaultOutput() {
-            let mainFolder = document.getElementById('mainFolder').value || 'batch_output';
-            fetch('/set-output-folder', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mainFolder, useDefault: true })
-            }).then(res => res.json())
-              .then(data => {
-                  outputFolder = data.folder;
-                  document.getElementById('outputStatus').textContent = `默认位置：${data.folder}`;
-              });
+            document.getElementById('outputStatus').textContent = '输出到云端临时目录';
         }
 
-        // 层级检测相关
         function setupLevelChangeListeners() {
             for (let i = 1; i <= currentLevelCount; i++) {
                 setupLevelListener(i);
@@ -733,304 +711,163 @@
                     })
                 });
             }
-            
             return levels;
         }
 
-        // 切换数据来源
         function switchDataSource(type) {
             currentDataSource = type;
-            document.querySelectorAll('.data-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            document.querySelectorAll('.data-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelector(`.data-tab[onclick="switchDataSource('${type}')"]`).classList.add('active');
-            
             document.getElementById('nameContent').classList.remove('active');
             document.getElementById('excelContent').classList.remove('active');
             document.getElementById(`${type}Content`).classList.add('active');
             detectLevels();
         }
 
-        // 选择源文件夹
-        function selectSourceFolder() {
-            fetch('/select-source-folder', { method: 'POST' })
-                .then(res => res.json())
+        // 上传源文件
+        document.getElementById('sourceFilesInput').addEventListener('change', function() {
+            const files = Array.from(this.files);
+            const formData = new FormData();
+            files.forEach(f => formData.append('files', f));
+            
+            fetch('/upload-source-files', { method: 'POST', body: formData })
+                .then(r => r.json())
                 .then(data => {
-                    if (data.status === 'success') {
-                        document.getElementById('sourceStatus').textContent = `已选择：${data.folder}`;
-                        // 多列显示文件列表
-                        let fileListHtml = data.files.map(file => 
-                            `<label><input type="checkbox" value="${file.path}" onchange="updateSelectedFiles()"> ${file.name}</label>`
-                        ).join('');
-                        document.getElementById('fileList').innerHTML = fileListHtml;
-                    } else {
-                        alert('选择失败：' + data.message);
-                    }
+                    selectedFiles = data.files;
+                    document.getElementById('sourceStatus').textContent = `已上传 ${data.files.length} 个文件`;
+                    let html = data.files.map(f => 
+                        `<label><input type="checkbox" checked> ${f.name} (${f.size})</label>`
+                    ).join('');
+                    document.getElementById('fileList').innerHTML = html;
+                    document.getElementById('totalFileCount').textContent = data.files.length;
                 });
-        }
+        });
 
-        // 更新选中的文件
-        function updateSelectedFiles() {
-            let checkedFiles = Array.from(document.querySelectorAll('#fileList input:checked'))
-                .map(input => input.value);
-            fetch('/select-files', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ files: checkedFiles })
-            }).then(res => res.json())
-              .then(data => {
-                  document.getElementById('totalFileCount').textContent = data.count;
-              });
-        }
-
-        // Name数据处理
-        function selectNameFile() {
-            fetch('/select-name-file', { method: 'POST' })
-                .then(res => res.json())
+        // 上传 name.txt
+        document.getElementById('nameFileInput').addEventListener('change', function() {
+            const file = this.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            fetch('/upload-name-file', { method: 'POST', body: formData })
+                .then(r => r.json())
                 .then(data => {
-                    if (data.status === 'success') {
-                        document.getElementById('sourceStatus').textContent = `已选择名称文件：${data.file}`;
-                        const nameText = data.names.join('\n');
-                        document.getElementById('nameTextarea').value = nameText;
-                        saveNameToCache(nameText, `文件：${data.file.split('\\').pop()}`);
-                        nameList = data.names;
-                        fetch('/update-name-list', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ nameList: nameList })
-                        });
-                    } else {
-                        alert('选择失败：' + data.message);
-                    }
+                    nameList = data.names;
+                    document.getElementById('sourceStatus').textContent = `已上传 name.txt（${data.count} 项）`;
+                    document.getElementById('nameTextarea').value = data.names.join('\n');
+                    saveNameToCache(data.names.join('\n'), `文件：${file.name}`);
                 });
-        }
+        });
+
+        // 上传 Excel
+        document.getElementById('excelFileInput').addEventListener('change', function() {
+            const file = this.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            fetch('/upload-excel-file', { method: 'POST', body: formData })
+                .then(r => r.json())
+                .then(data => {
+                    excelData = data.data;
+                    document.getElementById('excelLoadStatus').textContent = `已上传 Excel（${data.rowCount} 行）`;
+                    
+                    let table = '<tr>' + data.columns.map(c => `<th>${c}</th>`).join('') + '</tr>';
+                    data.data.forEach(row => {
+                        table += '<tr>' + row.map(cell => `<td>${cell}</td>`).join('') + '</tr>';
+                    });
+                    const previewTable = document.getElementById('previewTable');
+                    previewTable.innerHTML = table;
+                    previewTable.style.display = 'table';
+                    document.getElementById('excelPreview').innerHTML = '';
+                    document.getElementById('excelPreview').appendChild(previewTable);
+                });
+        });
 
         function saveManualName() {
-            const textarea = document.getElementById('nameTextarea');
-            const inputText = textarea.value.trim();
-            if (!inputText) {
-                alert('请输入有效的名称（每行1个）');
-                return;
-            }
-
-            nameList = inputText.split('\n').filter(line => {
-                line = line.trim();
-                return line && !line.startsWith('#');
-            });
-
-            if (nameList.length === 0) {
-                alert('未解析到有效名称（请去掉注释和空行）');
-                return;
-            }
-
-            document.getElementById('sourceStatus').textContent = `手动输入：共 ${nameList.length} 个名称`;
+            const text = document.getElementById('nameTextarea').value.trim();
+            if (!text) return alert('请输入名称');
+            nameList = text.split('\n').filter(l => l.trim() && !l.startsWith('#'));
+            document.getElementById('sourceStatus').textContent = `手动输入：${nameList.length} 个`;
+            saveNameToCache(text, 'Manual');
             fetch('/update-name-list', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nameList: nameList })
+                body: JSON.stringify({ nameList })
             });
-            saveNameToCache(inputText, '手动输入');
         }
 
         function saveNameToCache(content, title) {
             let cache = JSON.parse(localStorage.getItem('nameCache') || '[]');
-            const newCache = {
-                time: new Date().toLocaleTimeString(),
-                title: title,
-                content: content
-            };
-            cache.unshift(newCache);
-            if (cache.length > 5) cache = cache.slice(0, 5);
+            cache.unshift({ time: new Date().toLocaleTimeString(), title, content });
+            if (cache.length > 5) cache.pop();
             localStorage.setItem('nameCache', JSON.stringify(cache));
             loadNameCache();
         }
 
         function loadNameCache() {
-            const cacheListEl = document.getElementById('nameCacheList');
+            const list = document.getElementById('nameCacheList');
             const cache = JSON.parse(localStorage.getItem('nameCache') || '[]');
-            
-            if (cache.length === 0) {
-                cacheListEl.innerHTML = '<span style="color:#999;">暂无缓存记录</span>';
-                return;
-            }
-
-            let cacheHtml = cache.map((item, index) => `
-                <div class="cache-item" onclick="useCacheItem(${index})">
-                    [${index+1}] ${item.time} - ${item.title}
-                </div>
-            `).join('');
-            cacheListEl.innerHTML = cacheHtml;
+            list.innerHTML = cache.length ? cache.map((c, i) => 
+                `<div class="cache-item" onclick="useCache(${i})">[${i+1}] ${c.time} - ${c.title}</div>`
+            ).join('') : '<span style="color:#999;">暂无缓存</span>';
         }
 
-        function useCacheItem(index) {
-            const cache = JSON.parse(localStorage.getItem('nameCache') || '[]');
-            if (cache[index]) {
-                const item = cache[index];
-                document.getElementById('nameTextarea').value = item.content;
-                nameList = item.content.split('\n').filter(line => {
-                    line = line.trim();
-                    return line && !line.startsWith('#');
-                });
-                document.getElementById('sourceStatus').textContent = 
-                    `复用缓存：${item.title}（共 ${nameList.length} 个名称）`;
-                fetch('/update-name-list', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nameList: nameList })
-                });
-            }
+        function useCache(i) {
+            const cache = JSON.parse(localStorage.getItem('nameCache'));
+            const item = cache[i];
+            document.getElementById('nameTextarea').value = item.content;
+            nameList = item.content.split('\n').filter(l => l.trim() && !l.startsWith('#'));
+            document.getElementById('sourceStatus').textContent = `缓存：${nameList.length} 个`;
         }
 
         function clearNameCache() {
-            if (confirm('确定要清理所有name缓存记录吗？')) {
+            if (confirm('清理缓存？')) {
                 localStorage.removeItem('nameCache');
                 loadNameCache();
-                alert('缓存已清理完成');
             }
         }
 
-        // Excel数据处理
-        function selectExcelFile() {
-            fetch('/select-excel-file', { method: 'POST' })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        document.getElementById('excelLoadStatus').textContent = 
-                            `已选择：${data.file}（共 ${data.rowCount} 行数据）`;
-                        excelData = data.data;
-                        
-                        // 显示前10行预览
-                        const previewTable = document.getElementById('previewTable');
-                        const excelPreview = document.getElementById('excelPreview');
-                        
-                        let tableHtml = '<tr>';
-                        for (let i = 0; i < data.columns.length; i++) {
-                            tableHtml += `<th>${data.columns[i]}</th>`;
-                        }
-                        tableHtml += '</tr>';
-                        
-                        const previewRows = data.data.slice(0, 10);
-                        previewRows.forEach(row => {
-                            tableHtml += '<tr>';
-                            row.forEach(cell => {
-                                tableHtml += `<td>${cell || ''}</td>`;
-                            });
-                            tableHtml += '</tr>';
-                        });
-                        previewTable.innerHTML = tableHtml;
-                        
-                        excelPreview.innerHTML = '';
-                        excelPreview.appendChild(previewTable);
-                        previewTable.style.display = 'table';
-                        
-                    } else {
-                        alert('选择失败：' + data.message);
-                    }
-                });
-        }
-
-        // 层级设置
         function addLevel() {
             currentLevelCount++;
-            const levelSettings = document.getElementById('levelSettings');
-            const newLevel = document.createElement('div');
-            newLevel.className = 'level-item';
-            newLevel.innerHTML = `
-                <label>${currentLevelCount}级文件夹：</label>
-                <input type="text" id="level${currentLevelCount}" placeholder="可选">
-            `;
-            levelSettings.appendChild(newLevel);
+            const div = document.createElement('div');
+            div.className = 'level-item';
+            div.innerHTML = `<label>${currentLevelCount}级文件夹：</label><input type="text" id="level${currentLevelCount}" placeholder="可选">`;
+            document.getElementById('levelSettings').appendChild(div);
             setupLevelListener(currentLevelCount);
         }
 
-        // 输出设置
-        function setOutputFolder() {
-            let mainFolder = document.getElementById('mainFolder').value || 'batch_output';
-            fetch('/set-output-folder', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mainFolder, useDefault: false })
-            }).then(res => res.json())
-              .then(data => {
-                  if (data.status === 'success') {
-                      outputFolder = data.folder;
-                      document.getElementById('outputStatus').textContent = `已选择：${data.folder}`;
-                  } else {
-                      alert('选择失败：' + data.message);
-                  }
-              });
-        }
-
-        // 清空所有数据
         function clearAllData() {
-            if (confirm('确定要清空所有设置和数据吗？')) {
-                document.getElementById('nameTextarea').value = '';
-                document.getElementById('sourceStatus').textContent = '未选择（可选）';
-                document.getElementById('fileList').innerHTML = '请先选择源文件夹（可选）';
-                document.getElementById('excelLoadStatus').textContent = '未选择Excel文件';
-                document.getElementById('excelPreview').innerHTML = 
-                    '<div style="color: #666; font-style: italic;">请选择Excel文件查看预览</div>';
-                document.getElementById('levelStatus').textContent = '未检测到层级设置';
-                document.getElementById('resultDetails').textContent = '等待处理...';
-                
-                document.getElementById('folderCount').textContent = '0';
-                document.getElementById('successCount').textContent = '0';
-                document.getElementById('failCount').textContent = '0';
-                document.getElementById('totalFileCount').textContent = '0';
-                
-                currentDataSource = 'name';
-                excelData = [];
-                nameList = [];
-                
-                switchDataSource('name');
-                setDefaultOutput();
-            }
+            if (!confirm('清空所有？')) return;
+            ['sourceStatus', 'fileList', 'excelLoadStatus', 'levelStatus', 'resultDetails'].forEach(id => 
+                document.getElementById(id).textContent = id === 'fileList' ? '请先选择源文件夹' : '等待处理...'
+            );
+            ['folderCount', 'successCount', 'failCount', 'totalFileCount'].forEach(id => 
+                document.getElementById(id).textContent = '0'
+            );
+            document.getElementById('nameTextarea').value = '';
+            document.getElementById('previewTable').style.display = 'none';
+            selectedFiles = []; nameList = []; excelData = [];
+            switchDataSource('name');
         }
 
-        // 开始处理
         function startProcess() {
             const levels = detectLevels();
-            if (levels.length === 0) {
-                alert('请至少设置1级文件夹（必填项）');
-                document.getElementById('level1').focus();
-                return;
-            }
-            
-            if (currentDataSource === 'name' && (!nameList || nameList.length === 0)) {
-                alert('请输入或选择名称列表数据（必填项）');
-                document.getElementById('nameTextarea').focus();
-                return;
-            }
-            
-            if (currentDataSource === 'excel' && (!excelData || excelData.length === 0)) {
-                alert('请选择有效的Excel文件（必填项）');
-                return;
-            }
+            if (levels.length === 0) return alert('请设置至少1级文件夹');
+            if (currentDataSource === 'name' && nameList.length === 0) return alert('请输入名称');
+            if (currentDataSource === 'excel' && excelData.length === 0) return alert('请上传Excel');
 
             fetch('/process', { method: 'POST' })
-                .then(res => res.json())
+                .then(r => r.json())
                 .then(data => {
-                    if (data.status === 'error') {
-                        document.getElementById('resultDetails').textContent = '错误：' + data.message;
-                    } else {
-                        document.getElementById('folderCount').textContent = data.result.folder_count;
-                        document.getElementById('successCount').textContent = data.result.success_count;
-                        document.getElementById('failCount').textContent = data.result.fail_count;
-                        document.getElementById('totalFileCount').textContent = data.file_count;
-                        
-                        let details = `处理完成！\n`;
-                        if (data.result.file_count > 0) {
-                            details += `成功复制：${data.result.success_count} 个文件\n`;
-                            details += `复制失败：${data.result.fail_count} 个文件\n`;
-                        } else {
-                            details += `成功生成：${data.result.folder_count} 个文件夹\n`;
-                        }
-                        if (data.result.fail_details.length > 0) {
-                            details += '\n失败原因：\n' + data.result.fail_details.join('\n');
-                        }
-                        details += `\n输出位置：${data.output_folder}`;
-                        document.getElementById('resultDetails').textContent = details;
-                    }
+                    document.getElementById('folderCount').textContent = data.result.folder_count;
+                    document.getElementById('successCount').textContent = data.result.success_count;
+                    document.getElementById('failCount').textContent = data.result.fail_count;
+                    document.getElementById('totalFileCount').textContent = data.file_count;
+                    
+                    let details = `完成！\n`;
+                    if (data.file_count > 0) details += `复制：${data.result.success_count} 成功，${data.result.fail_count} 失败\n`;
+                    else details += `生成 ${data.result.folder_count} 个文件夹\n`;
+                    if (data.result.fail_details.length) details += '\n失败：\n' + data.result.fail_details.join('\n');
+                    details += `\n输出：${data.output_folder}`;
+                    document.getElementById('resultDetails').textContent = details;
                 });
         }
     </script>
