@@ -8,6 +8,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      CI: "true"
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -25,22 +29,12 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
 
-      - name: Deploy to Vercel with Token
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy to Vercel (Auto Token)
         run: |
-          # 使用 Token 登录（关键！）
-          echo "$VERCEL_TOKEN" | vercel login
-          
-          # 自动创建/链接项目
           vercel link --yes --prod || true
-          
-          # 强制部署
           DEPLOY_URL=$(vercel --prod --yes --force | grep -o "https://[^ ]*\.vercel\.app" | head -1)
-          
           if [ -n "$DEPLOY_URL" ]; then
             echo "部署成功！访问：$DEPLOY_URL"
-            echo "URL=$DEPLOY_URL" >> $GITHUB_ENV
           else
-            echo "部署完成，查看 Vercel Dashboard"
+            echo "部署完成，请访问 Vercel Dashboard 查看"
           fi
